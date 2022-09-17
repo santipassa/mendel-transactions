@@ -10,10 +10,25 @@ Service to handle Mendel Transactions
 ## Documentation
 
 [![spects](https://img.shields.io/badge/specs-%E2%9D%A4-green.svg)](http://localhost:8080/swagger-ui.html)
+#Different ways to run the application:
 
-## Running it with Docker locally:
+## Running it with Docker (downloading image from docker hub):
 
-1. Build fat jar file
+1. Pull the image:
+
+```bash 
+$ docker pull santipassa/mendel:mendel-transactions
+```
+
+2. Run the container:
+
+```bash 
+$ docker run --name mendel-transactions -p 8080:8080 santipassa/mendel:mendel-transactions
+```
+
+## Running it with Docker (building image on your computer):
+
+1. Build fat jar file:
 
 ```bash 
 $ mvn clean compile install 
@@ -68,7 +83,7 @@ $ curl --location --request PUT 'localhost:8080/transactions/12' \
 ``` bash
 $ curl --location --request GET 'localhost:8080/transactions/sum/12'
 ```
-### Get transactions ids by type :
+### Get transactions ids by type:
 ``` bash
 $ curl --location --request GET 'localhost:8080/transactions/types/shopping'
 ```
