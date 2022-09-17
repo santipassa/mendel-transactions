@@ -29,4 +29,25 @@ public class TransactionsControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", Matchers.is(1)));
     }
+
+    @Test
+    public void whenGetTransactionsIdByTypeThenTransactionsIdsAreReturnedSuccessfully() throws Exception {
+
+        // Given
+        mockMvc.perform((MockMvcRequestBuilders.put("/transactions/5").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":5000,\"type\":\"shopping\",\"parent_id\":null}")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", Matchers.is(5)));
+
+        mockMvc.perform((MockMvcRequestBuilders.put("/transactions/6").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":5000,\"type\":\"shopping\",\"parent_id\":null}")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", Matchers.is(6)));
+        // When
+        mockMvc.perform((MockMvcRequestBuilders.get("/transactions/types/shopping")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$.[0]", Matchers.is(5)))
+                .andExpect(jsonPath("$.[1]", Matchers.is(6)));
+    }
 }
