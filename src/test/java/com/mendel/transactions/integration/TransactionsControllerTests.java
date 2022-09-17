@@ -6,16 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.http.MediaType;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class TransactionsControllerTests {
+class TransactionsControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,6 +27,30 @@ public class TransactionsControllerTests {
                         .content("{\"amount\":5000,\"type\":\"shopping\"}")))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", Matchers.is(1)));
+    }
+
+    @Test
+    public void whenCreateTransactionWithInvalidParentIdThenNotFoundExceptionIsThrown() throws Exception {
+        // When
+        mockMvc.perform((MockMvcRequestBuilders.put("/transactions/2").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":5000,\"type\":\"shopping\",\"parent_id\":3}")))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", Matchers.is("transaction_not_found")));
+    }
+
+    @Test
+    public void whenCreateTransactionWithExistentIdThenBadRequestExceptionIsThrown() throws Exception {
+
+        // Given
+        mockMvc.perform((MockMvcRequestBuilders.put("/transactions/4").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":5000,\"type\":\"shopping\",\"parent_id\":null}")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", Matchers.is(4)));
+        // When
+        mockMvc.perform((MockMvcRequestBuilders.put("/transactions/4").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":5000,\"type\":\"shopping\",\"parent_id\":null}")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.is("transaction_already_exists")));
     }
 
     @Test
