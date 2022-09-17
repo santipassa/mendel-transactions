@@ -10,7 +10,8 @@ Service to handle Mendel Transactions
 ## Documentation
 
 [![spects](https://img.shields.io/badge/specs-%E2%9D%A4-green.svg)](http://localhost:8080/swagger-ui.html)
-#Different ways to run the application:
+
+# Different ways to run the application:
 
 ## Running it with Docker (downloading image from docker hub):
 
