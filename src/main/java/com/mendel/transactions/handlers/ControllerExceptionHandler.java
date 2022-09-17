@@ -1,6 +1,7 @@
 package com.mendel.transactions.handlers;
 
 import com.mendel.transactions.dto.ApiErrorDTO;
+import com.mendel.transactions.exceptions.TransactionAlreadyExistsException;
 import com.mendel.transactions.exceptions.TransactionNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,12 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+    @ExceptionHandler(TransactionAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorDTO> transactionAlreadyExistsExceptionHandler(TransactionAlreadyExistsException ex) {
+        ApiErrorDTO apiErrorDTO = ApiErrorDTO.builder().error("transaction_already_exists").message(ex.getMessage()).status(HttpStatus.BAD_REQUEST.value()).build();
+        return ResponseEntity.status(apiErrorDTO.getStatus()).body(apiErrorDTO);
+    }
 
     @ExceptionHandler(TransactionNotFoundException.class)
     public ResponseEntity<ApiErrorDTO> transactionNotFoundExceptionHandler(TransactionNotFoundException ex) {
