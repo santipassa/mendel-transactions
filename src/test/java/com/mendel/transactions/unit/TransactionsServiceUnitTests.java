@@ -66,10 +66,10 @@ public class TransactionsServiceUnitTests {
     public void whenSumTransactionAmountThenCorrectValueIsReturned() {
         when(transactionRepository.findAll())
                 .thenReturn(List.of(Transaction.builder()
-                        .id(2L)
-                        .amount(1000.0)
-                        .type("shopping")
-                        .build(),
+                                .id(2L)
+                                .amount(1000.0)
+                                .type("shopping")
+                                .build(),
                         Transaction.builder()
                                 .id(3L)
                                 .amount(2000.0)
